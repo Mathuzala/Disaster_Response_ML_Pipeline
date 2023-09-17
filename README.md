@@ -1,4 +1,8 @@
 # Disaster_Response_ML_Pipeline
+
+## Purpose
+The point of this projectis to analyze disaster data from the company Appen to build a model for an API that classifies disaster messages.There is a data set containing real messages that were sent during disaster events. A machine learning pipeline was created to categorize these events to simulate a situation where someone can send the messages to an appropriate disaster relief agency. This project includes a web app where an emergency worker can input a new message and get classification results in several categories. The web app also displays visualizations of the data. 
+
 ## ETL Pipeline (process_data.py)
 Description:
 The ETL (Extract, Transform, Load) process begins by reading in .csv files containing messages and categories of disaster response data. The two datasets are merged using a common 'id' and the categories are split into individual columns. After some cleaning (like converting category values into binary format and removing duplicates), the cleaned data is saved into a SQLite database.
