@@ -21,3 +21,7 @@ The Flask web application provides an interface where users can input a message 
     Navigate to the app's directory.
     Run the following command: python run.py
     Open a web browser and go to http://localhost:3001/ (or the port number provided in the terminal) to access the app.
+
+
+![image](https://github.com/Mathuzala/Disaster_Response_ML_Pipeline/assets/44985594/0bd790ac-65b9-4864-9bd2-a0b4d755a81e)
+
