@@ -1,6 +1,8 @@
 
 import sys
 import pandas as pd
+import sqlite3
+import nltk
 import re
 from sqlalchemy import create_engine
 from sklearn.pipeline import Pipeline
@@ -10,6 +12,20 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import classification_report
 from joblib import dump
+
+for dataset in ['punkt', 'wordnet']:
+    try:
+        nltk.data.find(f'tokenizers/{dataset}')
+    except LookupError:
+        nltk.download(dataset)
+
+# Check if punkt tokenizer is already downloaded
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    print("NLTK data tokenizers not found. Downloading now...")
+    nltk.download('punkt')
+    print("Download complete!")
 
 database_filepath = './DisasterResponse.db'
 
@@ -24,11 +40,19 @@ def load_data(database_filepath):
     - Y: DataFrame, target data (categories).
     - category_names: List, names of the categories.
     """
-    engine = create_engine(database_filepath)
-    df = pd.read_sql('SELECT * FROM DisasterData', engine)
+    #connect to the SQLite database
+    conn = sqlite3.connect(database_filepath)
+    
+    #read data into a DataFrame
+    df = pd.read_sql_query("SELECT * FROM DisasterData", conn)
+
+    #close the connection
+    conn.close()
+    
     X = df['message']
     Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)
     category_names = Y.columns.tolist()
+    
     return X, Y, category_names
 
 def tokenize(text):
