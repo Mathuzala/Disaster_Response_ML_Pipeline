@@ -1,4 +1,3 @@
-
 import sys
 import pandas as pd
 import sqlite3
@@ -128,15 +127,28 @@ def main():
         
         print('Building model...')
         model = build_model()
+
+        parameters = {
+        'tfidf__use_idf': [True],
+        'vect__max_df': [0.75, 1.0],
+        'vect__max_features': [None, 5000],
+        'clf__estimator__n_estimators': [100],
+        'clf__estimator__min_samples_split': [2]
+        }
+
+
+        cv = GridSearchCV(model, param_grid=parameters, verbose=1, n_jobs=-1)
         
         print('Training model...')
-        model.fit(X_train, Y_train)
+        cv.fit(X_train, Y_train)
+
+        print('Best Parameters:', cv.best_params_)
         
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(cv.best_estimator_, X_test, Y_test, category_names)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
-        save_model(model, model_filepath)
+        save_model(cv.best_estimator_, model_filepath)
 
         print('Trained model saved!')
 
